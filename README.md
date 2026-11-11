@@ -130,6 +130,58 @@ python manage.py runserver
 
 Mở trình duyệt: **http://127.0.0.1:8000**
 
+### Chuyển dữ liệu MySQL hiện có sang Render PostgreSQL
+
+Quy trình này dùng Django fixture để chuyển dữ liệu giữa hai loại database. Hãy sao lưu MySQL trước khi bắt đầu và tạm dừng ghi dữ liệu vào website cũ trong lúc export. Không đưa file fixture lên GitHub: file có thể chứa thông tin người dùng và password hash.
+
+1. Tạo PostgreSQL trên Render và deploy ứng dụng trước để migrations tạo các bảng. Trong Web Service, cấu hình:
+
+   - **Build Command:** `pip install -r requirements.txt && python manage.py collectstatic --noinput`
+   - **Start Command:** `python manage.py migrate --noinput && gunicorn snack_shop.wsgi:application --bind 0.0.0.0:$PORT`
+   - `DJANGO_SETTINGS_MODULE`: `snack_shop.settings_render`
+   - `DATABASE_URL`: Internal Database URL của PostgreSQL Render
+   - `SECRET_KEY`: secret do Render tạo
+
+2. Trên máy Windows có kết nối tới MySQL cũ, mở PowerShell tại thư mục dự án, kích hoạt virtual environment, rồi export fixture:
+
+   ```powershell
+   $fixture = "$env:USERPROFILE\FoodShopMigration\mysql-data.json"
+   New-Item -ItemType Directory -Force (Split-Path $fixture) | Out-Null
+   python manage.py dumpdata `
+     --settings=snack_shop.settings `
+     --natural-foreign --natural-primary `
+     --exclude=contenttypes `
+     --exclude=auth.permission `
+     --exclude=admin.logentry `
+     --exclude=sessions `
+     --indent 2 `
+     --output $fixture
+   ```
+
+3. Import vào **database Render còn trống**. Dùng External Database URL để máy tính kết nối được tới PostgreSQL Render. Đoạn PowerShell sau nhập URL mà không hiện nội dung khi gõ; URL và secret chỉ được giữ tạm trong phiên terminal:
+
+   ```powershell
+   $secureUrl = Read-Host "Render External Database URL" -AsSecureString
+   $urlPointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secureUrl)
+   try {
+       $env:DATABASE_URL = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($urlPointer)
+   }
+   finally {
+       [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($urlPointer)
+   }
+   $env:SECRET_KEY = "migration-only-" + [guid]::NewGuid().ToString("N")
+
+   python manage.py migrate --settings=snack_shop.settings_render
+   python manage.py loaddata --settings=snack_shop.settings_render $fixture
+
+   Remove-Item Env:DATABASE_URL
+   Remove-Item Env:SECRET_KEY
+   ```
+
+   Nếu `loaddata` báo lỗi, dừng lại và không chạy import lặp lại khi chưa kiểm tra dữ liệu đã được ghi một phần hay chưa. Sau khi xác nhận sản phẩm, tài khoản, đơn hàng hiển thị đúng trên Render, xóa fixture khỏi máy hoặc cất giữ an toàn như một bản sao lưu.
+
+`dumpdata` không chuyển file media lưu riêng trên máy; sản phẩm hiện dùng URL ảnh. Nếu database Render đã có dữ liệu, không import fixture theo cách trên vì có thể đụng khóa hoặc dữ liệu bị lặp. Các migrations tạo schema, không thay thế bước sao chép bản ghi này.
+
 ---
 
 ## 👤 Tài khoản mẫu
