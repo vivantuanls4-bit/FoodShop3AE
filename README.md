@@ -137,10 +137,12 @@ Quy trình này dùng Django fixture để chuyển dữ liệu giữa hai loạ
 1. Tạo PostgreSQL trên Render và deploy ứng dụng trước để migrations tạo các bảng. Trong Web Service, cấu hình:
 
    - **Build Command:** `pip install -r requirements.txt && python manage.py collectstatic --noinput`
-   - **Start Command:** `python manage.py migrate --noinput && gunicorn snack_shop.wsgi:application --bind 0.0.0.0:$PORT`
+   - **Start Command:** `DJANGO_SETTINGS_MODULE=snack_shop.settings_render python manage.py migrate --noinput && DJANGO_SETTINGS_MODULE=snack_shop.settings_render gunicorn snack_shop.wsgi:application --bind 0.0.0.0:$PORT`
    - `DJANGO_SETTINGS_MODULE`: `snack_shop.settings_render`
    - `DATABASE_URL`: Internal Database URL của PostgreSQL Render
    - `SECRET_KEY`: secret do Render tạo
+
+   Nếu Render vẫn báo `ModuleNotFoundError: No module named 'app'`, Start Command của Web Service đang ghi đè cấu hình trong repository. Mở **Settings → Build & Deploy → Start Command**, thay `gunicorn app:app` bằng lệnh Django ở trên rồi lưu và deploy lại. Procfile không thể ghi đè một Start Command đã nhập trực tiếp trong Dashboard.
 
 2. Trên máy Windows có kết nối tới MySQL cũ, mở PowerShell tại thư mục dự án, kích hoạt virtual environment, rồi export fixture:
 
