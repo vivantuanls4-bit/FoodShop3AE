@@ -1,0 +1,46 @@
+[
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$ioLiFV1D4etOzWb3CCah9X$C5DeJe7Na2SwsKBVBk8aN66cLohj7bs05u1bwvj6GiI=",
+    "last_login": "2026-11-17T00:25:13.966Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "email": "vivantuanls2@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-11-17T00:23:58.336Z",
+    "fullName": null,
+    "phoneNumber": null,
+    "address": null,
+    "role": "customer",
+    "status": true,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$SqL2bz0kFPqjnPMBWnXKjt$FLMdrx1HnQdCURi5WPBVXHjn0kNwF0BBCU5GhSQGni4=",
+    "last_login": "2026-11-12T13:00:23.959Z",
+    "is_superuser": false,
+    "username": "Abc@",
+    "first_name": "",
+    "last_name": "",
+    "email": "Abc@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-12T13:00:21.871Z",
+    "fullName": "Abc",
+    "phoneNumber": "0987654321",
+    "address": "A",
+    "role": "customer",
+    "status": true,
+    "groups": [],
+    "user_permissions": []
+  }
+}
+]

@@ -143,7 +143,7 @@ WSGI_APPLICATION = 'snack_shop.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 # Tự động đọc thông tin DB từ Railway hoặc dùng local MySQL
-DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
+#DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
@@ -164,7 +164,7 @@ elif DEBUG:
             "ENGINE": "django.db.backends.mysql",
             "NAME": os.environ.get("MYSQL_DATABASE", "fs_t5"),
             "USER": os.environ.get("MYSQL_USER", "root"),
-            "PASSWORD": os.environ.get("MYSQL_PASSWORD", ""),
+            "PASSWORD": os.environ.get("MYSQL_PASSWORD", "123456"),
             "HOST": os.environ.get("MYSQL_HOST", "localhost"),
             "PORT": os.environ.get("MYSQL_PORT", "3306"),
             "OPTIONS": {
@@ -222,7 +222,15 @@ NUMBER_GROUPING = 3
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+#cấu hình lưu trữ static
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -303,14 +311,5 @@ JAZZMIN_UI_TWEAKS = {
         'warning':   'btn-warning',
         'danger':    'btn-danger',
         'success':   'btn-success',
-    },
-}
-#cấu hình lưu trữ static
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
