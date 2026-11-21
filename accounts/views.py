@@ -12,6 +12,9 @@ def register_view(request):
             user = form.save()
             login(request, user)
             return redirect('products:product_list')
+        for field in form:
+            if field.errors:
+                field.field.widget.attrs['class'] += ' is-invalid'
     else:
         form = CustomUserCreationForm()
     return render(request, 'accounts/register.html', {'form': form})

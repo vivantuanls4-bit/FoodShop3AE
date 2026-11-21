@@ -16,12 +16,21 @@
                     {% for field in form %}
                         <div class="mb-3">
                             <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                            <input type="text" name="{{ field.name }}" class="form-control" id="{{ field.id_for_label }}" {% if field.field.required %}required{% endif %}>
+                            {% if field.field.widget.input_type == 'password' %}
+                                <div class="input-group">
+                                    {{ field }}
+                                    <button type="button" class="btn btn-outline-secondary" data-password-toggle aria-label="Hiện mật khẩu" aria-controls="{{ field.id_for_label }}" aria-pressed="false">
+                                        <i class="fa-solid fa-eye" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                            {% else %}
+                                {{ field }}
+                            {% endif %}
                             {% if field.help_text %}
                                 <div class="form-text">{{ field.help_text }}</div>
                             {% endif %}
                             {% for error in field.errors %}
-                                <div class="text-danger small">{{ error }}</div>
+                                <div class="invalid-feedback d-block">{{ error }}</div>
                             {% endfor %}
                         </div>
                     {% endfor %}

@@ -7,6 +7,11 @@ class CustomUserCreationForm(UserCreationForm):
         model = User
         fields = ('username', 'email', 'fullName', 'phoneNumber', 'address')
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+
 class CustomAuthenticationForm(AuthenticationForm):
     pass
 

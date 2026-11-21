@@ -55,7 +55,7 @@ class SnackAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('📋 Thông tin cơ bản', {
-            'fields': ('snackName', 'category', 'description', 'status'),
+            'fields': ('snackName', 'category', 'description', 'ingredients', 'status'),
         }),
         ('💰 Giá & Kho hàng', {
             'fields': ('price', 'quantity', 'soldCount'),

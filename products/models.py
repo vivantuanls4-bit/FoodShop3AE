@@ -17,6 +17,11 @@ class Snack(models.Model):
     snackName = models.CharField(max_length=255, verbose_name="Tên sản phẩm")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Giá")
     description = models.TextField(blank=True, null=True, verbose_name="Mô tả sản phẩm")
+    ingredients = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="Thành phần sản phẩm",
+    )
     image = models.URLField(max_length=500, blank=True, null=True, verbose_name="Hình ảnh (URL)")
     quantity = models.IntegerField(default=0, verbose_name="Số lượng")
     soldCount = models.IntegerField(default=0, verbose_name="Đã bán")
